@@ -1,0 +1,16 @@
+{
+  "name": "pixelgame",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start":"app.js"
+  },
+  "author": "dnll",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1",
+    "fs": "^0.0.1-security",
+    "nodemon": "^2.0.19"
+  }
+}
