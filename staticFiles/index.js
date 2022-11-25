@@ -1,5 +1,8 @@
 import stopModule from "/moduleOnn.js";
 
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+}
 
 setTimeout(() => {
     window.scrollTo({
@@ -7,7 +10,39 @@ setTimeout(() => {
         left:0,
         behavior: "smooth"
     })
-})
+});
+
+let snakeHead = document.getElementById('snakeHead');
+let snakeblock = document.createElement('div');
+
+let box = 30;
+
+
+
+let colours = ["red","orange", "yellow", "green", "blue", "violet"];
+
+let food = [
+    {
+        x:0,
+        y:0
+    }
+];
+
+let snake = [
+    {
+        x:0,
+        y:0,
+    }
+]
+
+let snakePos = {
+    top: 0,
+    bot: 0,
+    left: 0,
+    right: 0,
+}
+
+let stapSpeed = 1;
 let interval = 500;
 
 let raymbow = ['rad', 'yellow','green', 'blue', 'violet'];
@@ -38,21 +73,21 @@ let ib = 2800;
 // movement triger
     addEventListener("keydown", (e)=> {
         
-        if(e.code == "KeyS"){
+        if(e.keyCode == 40){
 
             dotStatus.botM = 1
         }
-        if(e.code == "KeyW"){
+        if(e.keyCode == 38){
             
             dotStatus.topM = 1
         }
 
-        if(e.code == "KeyA"){
+        if(e.keyCode == 37){
            
             dotStatus.leftM = 1   
             }
 
-        if(e.code == "KeyD"){
+        if(e.keyCode == 39){
         
             dotStatus.rightM = 1
         }
@@ -60,17 +95,17 @@ let ib = 2800;
 
 
     addEventListener("keyup",(e)=>{
-        if(e.code == "KeyS"){
+        if(e.keyCode == 40){
             dotStatus.botM = 0
         }
-        if(e.code == "KeyW"){
+        if(e.keyCode == 38){
             dotStatus.topM = 0
         }
-        if(e.code == "KeyA"){
+        if(e.keyCode == 37){
             
             dotStatus.leftM = 0
         }
-        if(e.code == "KeyD"){
+        if(e.keyCode == 39){
             
             dotStatus.rightM = 0
         }
@@ -83,9 +118,6 @@ let ib = 2800;
 let test =  document.createElement("div");
 test.innerHTML = "";
 
-    function getRandomInt(min, max) {
-        return Math.floor(Math.random() * (max - min)) + min;
-    }
 
 
 
@@ -118,12 +150,14 @@ let dotY = ib;
 
 let powerScore = document.getElementById("powerScore");
 let tip = document.createElement("div");
-tip.cloneNode(true)
+tip.cloneNode(true);
+
 css(tip, {
     "position": "relative",
     "width": "1000px",
     "height": "100px",
 });
+
 let rowsZone = document.getElementById("rowsZone");
 
 let tags = [];
@@ -165,7 +199,71 @@ css((a('row')), {
     'background-color':"red",
     'border-radius':"100%"
 })
-},interval);
+},200);
+
+
+function snakeGen(){
+    console.log("one")
+    snakeblock = document.createElement('div');
+    snakeblock.id = "snakeLenght";
+    snakeArea.append(snakeblock);
+
+    css(snakeblock, {
+        
+        "left":"-500px",
+        "position": "absolute",
+        "width": "30px",
+        "height": "30px",
+        "background-color": "black"
+    });
+    let ii = snake.length;
+
+    snake.push({
+    x:snake[ii - 1].x,
+    y:snake[ii - 1].y,
+});
+}
+
+let allPixel;
+function getRandomIntFood(min, max) {
+    let a =  Math.floor(Math.random() * 15 + 1) * box
+    return parseInt(a);
+}
+let snakeArea = document.getElementById("snakeArea");
+
+function foodGen(i) {
+    let pixel = document.createElement("div");
+    allPixel = document.querySelectorAll("#pixel");
+    pixel.id = "pixel";
+    let posX = getRandomIntFood(15, 1);
+    let posY = getRandomIntFood(15, 1);
+
+    food = [{
+        x: posX,
+        y: posY,
+    }]
+
+    css(pixel, {
+        "top": `${posY}`,
+        "left":`${posX}`,
+        "position": "absolute",
+        "width": "30px",
+        "height": "30px",
+        "border": "1px solid black",
+        "background-color": "white"
+            
+    });
+
+    if(i == 1){
+        allPixel[0].remove();
+    }
+
+    snakeArea.appendChild(pixel);
+
+}
+
+
+
 
 
 (function updateBlocks(){allBlocks.forEach(e => 
@@ -181,11 +279,13 @@ css((a('row')), {
          let i = 0;
          let ask = +prompt("1", 1);
          let count = 0;
+         let snakeTriger = 0;
          let eq;
     let render = setInterval(() => {
         
         let rows = document.querySelectorAll('.row');
         rowPos++;
+
         rows.forEach((e, index) => {
                 e.style.top = parseInt(e.style.top) + 1 + "px";
                 e.style['background-color'] = raymbow[index];
@@ -200,6 +300,7 @@ css((a('row')), {
                 
                 if(ia <= rowX + 15 && ia >= rowX - 15 && ib <= rowY + 15 && ib >= rowY - 15) {
                     score.innerHTML = `<h1> ${0}</h1>`;
+                    console.log(snakeTriger)
                     tip.innerHTML = ``
                     i = 0;
                     
@@ -243,9 +344,11 @@ css((a('row')), {
 
                 if(eq[count] == mass[count]){
                     count++
+                    snakeTriger = 1;
                     console.log(count)
                     new Promise((resolve) => {
-                        if(count == 10){
+                        // flag
+                        if(count == 1){
                              resolve();
                         }
                     }).then(() =>{
@@ -270,14 +373,114 @@ css((a('row')), {
                 top: viewT - 1000,
                 left: 1,
               });
-
+           
               if(ib <= viewT - 1000) {
                 window.scrollTo(0, viewT - 2000)
               }
         } else {
             window.scrollTo(0, viewT + 1000)
         }
-
+        //snake start
+        if(ib <= viewT && snakeTriger == 1) {
+            
+            snakeTriger -= 1;
+            
+            foodGen();
+            let allSnakeBlocks;
+            function generation() {
+                let render = setInterval(() => {
+                   
+            if(snake[0].x >= 990) {
+                snake[0].x = 0;
+            }
+            if(snake[0].x < 0) {
+                snake[0].x = 960
+            }
+            if(snake[0].y >= 990) {
+                snake[0].y = 0
+            }
+            if(snake[0].y < 0) {
+                snake[0].y = 990
+            }
+                        
+                    let snakeX = snake[0].x;
+                    let snakeY = snake[0].y;
+                
+                    let mssi = snake.reduce((mass, e) => {
+                    
+                    mass.push({x:e.x, y:e.y});
+                    return mass;
+                    }, []);
+                
+                
+                    snakeHead.style.left = snakeX + "px";
+                    snakeHead.style.top = snakeY + "px";
+                
+                
+                    allSnakeBlocks = document.querySelectorAll('#snakeLenght');
+                
+                    snake.forEach((e, index) => {
+                    
+                        if(index < snake.length - 1){
+                            
+                                allSnakeBlocks[index].style.left = snake[index + 1].x + "px"
+                                allSnakeBlocks[index].style.top = snake[index + 1].y + "px"
+                
+                                snake[index + 1 ].x = mssi[index].x;
+                                snake[index + 1].y = mssi[index].y;
+                
+                        }
+                    });
+                
+                
+                
+                    if(snakePos.top == 1) {
+                        snake[0].y -= box;
+                
+                    }
+                
+                    if(snakePos.bot == 1) {
+                        snake[0].y +=box;
+                        
+                    }
+                
+                    if(snakePos.left == 1) {
+                        snake[0].x -= box;
+                    }
+                
+                    if(snakePos.right == 1) {
+                        snake[0].x += box
+                        
+                    }
+                
+                
+                
+                    snake.forEach((e, i) => {
+                        if(i > 0){
+                        if(snake[0].x == snake[i].x && snake[0].y == snake[i].y) {
+                            
+                            clearInterval(render);
+                            new Promise((resolve, reject) => {
+                                resolve(10)
+                            }).then(result => {generation(); snake.splice(1, snake.length - 1);  allSnakeBlocks.forEach((e) => e.remove());
+                            
+                        })
+                        }}
+                    })
+                    new Promise((resolve) => {
+                        if(snake[0].x == food[0].x && snake[0].y == food[0].y) {
+                        
+                            
+                            setTimeout(() => resolve(), 100);
+                        }
+                    }).then(() => {foodGen(1); snakeGen()})
+                
+                }, 110)
+                }
+                
+                generation();
+                
+        }
 
         // Movevmant
         if(dotStatus.topM == 1 && dotStatus.stopT == 0) {
@@ -309,7 +512,7 @@ css((a('row')), {
         dotStatus.stopT = stopers.stopT;
         dotStatus.stopB = stopers.stopB;
         
-    }, 1);
+    }, stapSpeed);
 
 
     // Background animation
@@ -321,6 +524,7 @@ css((a('row')), {
         });
             const users = await response.json();
             let q = 0
+
             setInterval(()=> {
                 q += 1;
                 console.log(q)
@@ -336,6 +540,3 @@ css((a('row')), {
         }
 
     GetColors();
-
-
-

@@ -78,7 +78,7 @@
 
 
 #stapOneBorder{
-    background-color: blueviolet;
+    background-color: black;
     width: 1010px;
     height: 1px;
     left: -10px;
@@ -88,7 +88,7 @@
 }
 
 #stapFourBorder{
-    background-color: blueviolet;
+    background-color: black;
     width: 1px;
     height: 3020px;
     top:0px;
@@ -118,4 +118,25 @@
     width: 100%;
     position: absolute;
 
+}
+
+#snakeHead {
+    z-index: 1;
+    top:1030px;
+    left: 100px;
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border: 1px solid white;
+    background-color: black;
+    }
+
+
+#snakeArea {
+    position: absolute;
+    top: 1000px;
+    width: 990px;
+    height: 990px;
+    left: 0px;
+    border: 0px solid red;
 }
