@@ -3,7 +3,7 @@ const fs = require("fs");
 const { dirname } = require("path");
 const { execPath } = require("process");
 const jsonParser = express.json();
-
+var nodemailer = require('nodemailer');
 const filePath = 'database/data.json';
 
 let dataColors = fs.readFileSync(filePath, "utf8");
@@ -30,4 +30,3 @@ app.use("/lobby", (req, res) => {
 
 res.sendFile(__dirname + "/lobby/indexLobby.html");
 }).listen(3000);
- 
