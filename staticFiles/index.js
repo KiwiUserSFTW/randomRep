@@ -1,10 +1,22 @@
 import stopModule from "/moduleOnn.js";
 
+// Logic function
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-setTimeout(() => {
+function getRandomIntFood(min, max) {
+    let a =  Math.floor(Math.random() * 15 + 1) * box
+    return parseInt(a);
+}
+
+function css(element, style) {
+    for (const property in style)
+    element.style[property] = style[property];
+}
+
+
+(() => {
     window.scrollTo({
         top:2000,
         left:0,
@@ -16,10 +28,6 @@ let snakeHead = document.getElementById('snakeHead');
 let snakeblock = document.createElement('div');
 
 let box = 30;
-
-
-
-let colours = ["red","orange", "yellow", "green", "blue", "violet"];
 
 let food = [
     {
@@ -42,9 +50,6 @@ let snakePos = {
     right: 0,
 }
 
-let stapSpeed = 1;
-let interval = 500;
-
 let raymbow = ['rad', 'yellow','green', 'blue', 'violet'];
 let score = document.getElementById("score");
 let dot = document.getElementById("dot");
@@ -61,7 +66,6 @@ let dotStatus = {
 }
 
 let viewT = 2000;
-
 
 //position left
 let ia = 500;
@@ -115,18 +119,14 @@ let ib = 2800;
 
     
 
-let test =  document.createElement("div");
-test.innerHTML = "";
+let point =  document.createElement("div");
+point.innerHTML = "";
 
 
 
 
-    function css(element, style) {
-        for (const property in style)
-        element.style[property] = style[property];
-    }
-
-    css(test, {
+   
+    css(point, {
         'background-color':"white",
         'position':'absolute',
         'width':'10px',
@@ -137,9 +137,9 @@ test.innerHTML = "";
     });
 
 
-document.body.appendChild(test);
-let lightPosX = parseInt(test.style.left);
-let lightPosY = parseInt(test.style.top);
+document.body.appendChild(point);
+let lightPosX = parseInt(point.style.left);
+let lightPosY = parseInt(point.style.top);
 
 let allBlocks = document.querySelectorAll(".block")
 let stopCordinate = [];
@@ -225,10 +225,7 @@ function snakeGen(){
 }
 
 let allPixel;
-function getRandomIntFood(min, max) {
-    let a =  Math.floor(Math.random() * 15 + 1) * box
-    return parseInt(a);
-}
+
 let snakeArea = document.getElementById("snakeArea");
 
 function foodGen(i) {
@@ -326,10 +323,10 @@ function foodGen(i) {
             i++
             
             score.innerHTML = `<h1> ${i}</h1>`
-            test.style.left = getRandomInt(1, 1000);
-            test.style.top = getRandomInt(2500, 3000);
-            lightPosX = parseInt(test.style.left);
-            lightPosY = parseInt(test.style.top);
+            point.style.left = getRandomInt(1, 1000);
+            point.style.top = getRandomInt(2500, 3000);
+            lightPosX = parseInt(point.style.left);
+            lightPosY = parseInt(point.style.top);
             powerScore.appendChild(tip);
             new Promise((resolve, reject) => {
                 if(i >= 1 && i <= 11){
@@ -380,6 +377,51 @@ function foodGen(i) {
         } else {
             window.scrollTo(0, viewT + 1000)
         }
+
+        // Snake control
+addEventListener('keydown', (e) => {
+    if(e.keyCode == 83 && snakePos.top != 1) {
+        for(i in snakePos){
+            snakePos[i] = 0;
+            
+        }
+        snakePos.bot = 1;
+        
+    }
+
+    if(e.keyCode == 87 && snakePos.bot != 1) {
+        for(i in snakePos){
+            snakePos[i] = 0;
+            
+        }
+        snakePos.top = 1;
+        
+    }
+
+    if(e.keyCode == 65 && snakePos.right != 1) {
+        for(i in snakePos){
+            snakePos[i] = 0;
+            
+        }
+        snakePos.left = 1;
+        
+        
+    }
+
+    if(e.keyCode == 68 && snakePos.left != 1) {
+        for(i in snakePos){
+            snakePos[i] = 0;
+            
+        }
+
+        snakePos.right = 1;
+    
+       
+    }
+
+
+});
+
         //snake start
         if(ib <= viewT && snakeTriger == 1) {
             
@@ -512,7 +554,7 @@ function foodGen(i) {
         dotStatus.stopT = stopers.stopT;
         dotStatus.stopB = stopers.stopB;
         
-    }, stapSpeed);
+    }, 1);
 
 
     // Background animation
