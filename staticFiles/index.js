@@ -6,7 +6,7 @@ function getRandomInt(min, max) {
 }
 
 function getRandomIntFood(min, max) {
-    let a =  Math.floor(Math.random() * 15 + 1) * box
+    let a =  Math.floor(Math.random() * min + max) * box
     return parseInt(a);
 }
 
@@ -23,7 +23,7 @@ function css(element, style) {
         behavior: "smooth"
     })
 });
-
+let ask;
 let snakeHead = document.getElementById('snakeHead');
 let snakeblock = document.createElement('div');
 
@@ -203,7 +203,6 @@ css((a('row')), {
 
 
 function snakeGen(){
-    console.log("one")
     snakeblock = document.createElement('div');
     snakeblock.id = "snakeLenght";
     snakeArea.append(snakeblock);
@@ -232,8 +231,8 @@ function foodGen(i) {
     let pixel = document.createElement("div");
     allPixel = document.querySelectorAll("#pixel");
     pixel.id = "pixel";
-    let posX = getRandomIntFood(15, 1);
-    let posY = getRandomIntFood(15, 1);
+    let posX = getRandomIntFood(30, 1);
+    let posY = getRandomIntFood(30, 1);
 
     food = [{
         x: posX,
@@ -261,7 +260,7 @@ function foodGen(i) {
 
 
 
-
+let serverScore;
 
 (function updateBlocks(){allBlocks.forEach(e => 
         stopCordinate.push({
@@ -274,7 +273,8 @@ function foodGen(i) {
          let rowPos = 0;
          let mass = ["🍏 ","🍎 ","🍐 ","🍊 ","🍋 ","🍉 ","🍇 ","🍓 ","🥑 ","🍍 ","🥝 "];
          let i = 0;
-         let ask = +prompt("1", 1);
+         ask = +prompt("1", 1);
+         let id = ask;
          let count = 0;
          let snakeTriger = 0;
          let eq;
@@ -297,7 +297,6 @@ function foodGen(i) {
                 
                 if(ia <= rowX + 15 && ia >= rowX - 15 && ib <= rowY + 15 && ib >= rowY - 15) {
                     score.innerHTML = `<h1> ${0}</h1>`;
-                    console.log(snakeTriger)
                     tip.innerHTML = ``
                     i = 0;
                     
@@ -312,7 +311,7 @@ function foodGen(i) {
                 }
 
             }).then(result => {
-            if(result != 1){
+            if(result != 1&& result != 2){
                 clearInterval(render);
                 
                 }
@@ -342,7 +341,7 @@ function foodGen(i) {
                 if(eq[count] == mass[count]){
                     count++
                     snakeTriger = 1;
-                    console.log(count)
+                
                     new Promise((resolve) => {
                         // flag
                         if(count == 1){
@@ -378,8 +377,9 @@ function foodGen(i) {
             window.scrollTo(0, viewT + 1000)
         }
 
-        // Snake control
-addEventListener('keydown', (e) => {
+
+    // Snake control
+    addEventListener('keydown', (e) => {
     if(e.keyCode == 83 && snakePos.top != 1) {
         for(i in snakePos){
             snakePos[i] = 0;
@@ -424,7 +424,6 @@ addEventListener('keydown', (e) => {
 
         //snake start
         if(ib <= viewT && snakeTriger == 1) {
-            
             snakeTriger -= 1;
             
             foodGen();
@@ -511,12 +510,10 @@ addEventListener('keydown', (e) => {
                     })
                     new Promise((resolve) => {
                         if(snake[0].x == food[0].x && snake[0].y == food[0].y) {
-                        
-                            
+                          
                             setTimeout(() => resolve(), 100);
                         }
                     }).then(() => {foodGen(1); snakeGen()})
-                
                 }, 110)
                 }
                 
@@ -582,3 +579,17 @@ addEventListener('keydown', (e) => {
         }
 
     GetColors();
+
+setInterval(() => {
+    (async() => {
+        let response = await fetch("/user/pos", {
+        method: "POST",
+        headers: {
+            'Accept': "application/json",
+            'Content-Type': "application/json"
+        },//flag1
+        body: JSON.stringify({posX: snake[0].x, posY: snake[0].y, id:ask, score:score.innerHTML})
+    });
+    
+    console.log(await response.json())
+    })()}, 1000)
