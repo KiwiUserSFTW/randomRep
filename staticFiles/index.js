@@ -23,10 +23,12 @@ function css(element, style) {
         behavior: "smooth"
     })
 });
+let snakeScoreValue = 0;
 let ask;
 let snakeHead = document.getElementById('snakeHead');
 let snakeblock = document.createElement('div');
-
+let snakeScore = document.getElementById("snakeScore");
+let snakeAponentScore = document.getElementById("snakeAponentScore");
 let box = 30;
 
 let food = [
@@ -49,6 +51,11 @@ let snakePos = {
     left: 0,
     right: 0,
 }
+
+let brokePixelPos = [{
+posX: 0,
+posY: 0,
+}];
 
 let raymbow = ['rad', 'yellow','green', 'blue', 'violet'];
 let score = document.getElementById("score");
@@ -96,7 +103,6 @@ let ib = 2800;
             dotStatus.rightM = 1
         }
     })
-
 
     addEventListener("keyup",(e)=>{
         if(e.keyCode == 40){
@@ -228,11 +234,12 @@ let allPixel;
 let snakeArea = document.getElementById("snakeArea");
 
 function foodGen(i) {
+   
     let pixel = document.createElement("div");
     allPixel = document.querySelectorAll("#pixel");
     pixel.id = "pixel";
     let posX = getRandomIntFood(30, 1);
-    let posY = getRandomIntFood(30, 1);
+    let posY = getRandomIntFood(20, 1);
 
     food = [{
         x: posX,
@@ -250,17 +257,34 @@ function foodGen(i) {
             
     });
 
-    if(i == 1){
+    if(i == 1) {
         allPixel[0].remove();
     }
+
+    
+    snakeArea.appendChild(pixel);
+}
+    function brokePixelGen(x, y) {
+        let pixel = document.createElement("div");
+        allPixel = document.querySelectorAll("#pixel");
+        pixel.id = "brokePixel";
+        
+        css(pixel, {
+            "top": `${y}`,
+            "left":`${x}`,
+            "position": "absolute",
+            "width": "30px",
+            "height": "30px",
+            "border": "1px solid white",
+            "background-color": "black"
+                
+        });
+
 
     snakeArea.appendChild(pixel);
 
 }
 
-
-
-let serverScore;
 
 (function updateBlocks(){allBlocks.forEach(e => 
         stopCordinate.push({
@@ -348,7 +372,7 @@ let serverScore;
                              resolve();
                         }
                     }).then(() =>{
-                        console.log(stopCordinate[4] = {borderR: -10, borderT: 0});
+                        stopCordinate[4] = {borderR: -10, borderT: 0}
                         clearInterval(generation);
                         css(tip, {
                             "width": "280px",
@@ -503,14 +527,55 @@ let serverScore;
                             clearInterval(render);
                             new Promise((resolve, reject) => {
                                 resolve(10)
-                            }).then(result => {generation(); snake.splice(1, snake.length - 1);  allSnakeBlocks.forEach((e) => e.remove());
+                            }).then(result => {snakeScoreValue = 0; generation(); snake.splice(1, snake.length - 1);  allSnakeBlocks.forEach((e) => e.remove());
                             
                         })
                         }}
+                    });
+                    
+                    brokePixelPos.forEach((e, i) => {
+                        if(snake[0].x == e.posX && snake[0].y == e.posY) {
+                     
+                            snakeScore.innerHTML = 0;
+                            snakeScoreValue = 0; 
+                            snake.splice(1, snake.length - 1); 
+                            allSnakeBlocks.forEach((e) => e.remove());
+                        }
                     })
                     new Promise((resolve) => {
                         if(snake[0].x == food[0].x && snake[0].y == food[0].y) {
-                          
+                        snakeScore.innerHTML = snakeScoreValue;
+                        snakeScoreValue += 1;
+                            (async() => {
+                                let response = await fetch("/user/pos", {
+                                method: "POST",
+                                headers: {
+                                    'Accept': "application/json",
+                                    'Content-Type': "application/json"
+                                },//flag1
+                                body: JSON.stringify({posX: snake[0].x, posY: snake[0].y, score: snakeScoreValue, id:ask})
+                            });
+                            
+                            let data = await response.json()
+                            let aponentData = data.reduce((obj, e) => {
+                                if(e.id != ask) {
+                                    obj = e;
+                                }
+                                return obj;
+                            }, {});
+                            let chanceState = 0;
+                            if(brokePixelPos[brokePixelPos.length - 1].posX != aponentData.posX && brokePixelPos[brokePixelPos.length - 1].posY != aponentData.posY) {
+                                brokePixelPos[brokePixelPos.length] = {
+                                    posX: aponentData.posX,
+                                    posY: aponentData.posY
+                                }
+                                brokePixelGen(aponentData.posX, aponentData.posY)
+                            }
+                            
+                            snakeAponentScore.innerHTML = aponentData.score;
+
+
+                            })();
                             setTimeout(() => resolve(), 100);
                         }
                     }).then(() => {foodGen(1); snakeGen()})
@@ -566,7 +631,7 @@ let serverScore;
 
             setInterval(()=> {
                 q += 1;
-                console.log(q)
+             
                 if(q % 2 == 0){
                     document.getElementById("body").style.background = "black"
                 }   else{
@@ -579,17 +644,3 @@ let serverScore;
         }
 
     GetColors();
-
-setInterval(() => {
-    (async() => {
-        let response = await fetch("/user/pos", {
-        method: "POST",
-        headers: {
-            'Accept': "application/json",
-            'Content-Type': "application/json"
-        },//flag1
-        body: JSON.stringify({posX: snake[0].x, posY: snake[0].y, id:ask, score:score.innerHTML})
-    });
-    
-    console.log(await response.json())
-    })()}, 1000)

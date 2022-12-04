@@ -4,6 +4,7 @@
     overflow: hidden;
 }
 
+
 #dot{
     transition: 0s;
     position: absolute;
@@ -103,6 +104,12 @@
     top: 2500px;
 }
 
+#snakeScores {
+    position: absolute;
+    top: 1500px;
+    left: 1010px;
+
+}
 
 #powerScore{
     position: absolute;

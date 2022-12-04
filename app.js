@@ -33,10 +33,10 @@ app.post("/user/pos", jsonParser, (req, res) => {
          users.forEach((e) => {
          if(e.id == data.id) {
             console.log(result + "40")
-            result[e.id - 1] = {posX: data.posX, posY: data.posY, id: data.id};
+            result[e.id - 1] = {posX: data.posX, posY: data.posY,score: data.score, id: data.id};
          }
          else if(e.id != users.id){
-         result[e.id - 1] = {posX: e.posX, posY:e.posY, id: e.id };
+         result[e.id - 1] = {posX: e.posX, posY:e.posY, score: e.score, id: e.id };
            }
       });
 
