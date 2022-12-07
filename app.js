@@ -2,14 +2,16 @@ const express = require("express");
 const fs = require("fs");
 const { dirname } = require("path");
 const { execPath } = require("process");
+const { server } = require("websocket");
 const jsonParser = express.json();
-
 const filePath = 'database/data.json';
 
 let dataColors = fs.readFileSync(filePath, "utf8");
 let content = JSON.parse(dataColors);
 
 let app = express();
+const wsInstance = require("express-ws")(app);
+
 app.use(express.static('staticFiles'));
 app.use(express.static('staticFilesTwo'));
 app.use(express.static('database'))
@@ -18,6 +20,33 @@ app.get("/backGroundColors", jsonParser, (req, res) => {
     res.send(content) 
 })
 
+
+ app.ws('/', function(ws, req) {
+   ws.on('message', function(msg) {
+      let data = JSON.parse(msg)
+      let path = fs.readFileSync("../user1.json")
+      let result = [{}];
+      let users;
+
+      users = JSON.parse(path);
+         users.forEach((e) => {
+            if(e.id == data.id) {
+               result[e.id - 1] = {posX: data.posX, posY: data.posY,score: data.score, id: data.id};
+            }
+            else if(e.id != users.id){
+               result[e.id - 1] = {posX: e.posX, posY:e.posY, score: e.score, id: e.id };
+            }
+         });
+         
+   fs.writeFileSync("../user1.json", JSON.stringify(result));
+      
+      wsInstance.getWss().clients.forEach((e) => {
+         if(e.readyState == true) {
+            e.send(JSON.stringify(users))
+         }   
+   })
+   });
+ });
 
 let count = 0;
 
