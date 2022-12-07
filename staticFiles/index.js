@@ -367,6 +367,7 @@ let ask;
 
         //snake start
         if(ib <= viewT && snakeTriger == 1) {
+            socket.send(JSON.stringify({posX: snake[0].x, posY: snake[0].y, score: 0, id:ask}))
             snakeTriger -= 1;
             rows.forEach((e) => {
                 e.remove()
@@ -595,47 +596,21 @@ function brokePixelGen(x, y) {
                     allSnakeBlocks.forEach((e) => e.remove());
                 }
             })
+            // sockets 
             
-            new Promise((resolve) => {
-                if(snake[0].x == food[0].x && snake[0].y == food[0].y) {
-                snakeScore.innerHTML = snakeScoreValue;
-                snakeScoreValue += 1;
-
-                socket.send(JSON.stringify({posX: snake[0].x, posY: snake[0].y, score: snakeScoreValue, id:ask}));
-                    
-                 (async() => {
-                    /*
-                        let response = await fetch("/user/pos", {
-                        method: "POST",
-                        headers: {
-                            'Accept': "application/json",
-                            'Content-Type': "application/json"
-                        },//flag1
-                        body: JSON.stringify({posX: snake[0].x, posY: snake[0].y, score: snakeScoreValue, id:ask})
-                    });
-                    
-                    let data = await response.json()
-                    let aponentData = data.reduce((obj, e) => {
-                        if(e.id != ask) {
-                            obj = e;
-                        }
-                        return obj;
-                    }, {});
-                    */
-
-                    socket.onmessage = (e) => {
-                        let data = JSON.parse(e.data);
+                        socket.onmessage = (e) => {
+                            let data = JSON.parse(e.data);
                         let aponentData = data.reduce((obj, r) => {
-                        if(r.id != ask) {
-                            obj = r 
-                        }
-                        console.log(obj)
-                        return obj
-                        }, {})
-                        console.log(aponentData);
+                            if(r.id != ask) {
+                                obj = r 
+                            }
+                                
+                            return obj
+                        }, {});
+                        
                         brokePixelGen(aponentData.posX, aponentData.posY)
-                         if(brokePixelPos[brokePixelPos.length - 1].posX != aponentData.posX && brokePixelPos[brokePixelPos.length - 1].posY != aponentData.posY) {
-                        brokePixelPos[brokePixelPos.length] = {
+                        if(brokePixelPos[brokePixelPos.length - 1].posX != aponentData.posX && brokePixelPos[brokePixelPos.length - 1].posY != aponentData.posY) {
+                            brokePixelPos[brokePixelPos.length] = {
                             posX: aponentData.posX,
                             posY: aponentData.posY
                         }
@@ -644,14 +619,12 @@ function brokePixelGen(x, y) {
                     
                     snakeAponentScore.innerHTML = aponentData.score;
                     };
-
-                    
+            new Promise((resolve) => {
+                if(snake[0].x == food[0].x && snake[0].y == food[0].y) {
+                    socket.send(JSON.stringify({posX: snake[0].x, posY: snake[0].y, score: snakeScoreValue, id:ask}));
+                    snakeScore.innerHTML = snake.length;
+                    snakeScoreValue += 1;
                     let chanceState = 0;
-                    /*
-                   
-                    */
-
-                    })();
                     setTimeout(() => resolve(), 100);
                 }
             }).then(() => {foodGen(1); snakeGen()})
