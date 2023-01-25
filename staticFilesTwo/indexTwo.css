@@ -1,0 +1,161 @@
+#body{
+    background-color:#85AAE1;
+    transition: 2.5s;
+    overflow: hidden;
+}
+
+
+#dot{
+    transition: 0s;
+    position: absolute;
+    color: white;
+    height: 20px;
+    width : 20px;
+    border-radius: 10px;
+    left: 500px;
+    top: 2800px;
+    border-bottom-left-radius: 10px;
+    background-color: white;
+}
+
+#testBlock{
+    color: black;
+    background-color: black;
+    position:absolute;
+    left:300px;
+    top:400px;
+    width:100px;
+    height: 100px;
+    border: 5px solid white;
+    border-right-color: rgb(123, 42, 122);
+    border-left-color: rgb(123, 42, 122);
+}
+
+#testBlock1{
+   
+    color: black;
+    background-color: black;
+    position:absolute;
+    left:700px;
+    top:400px;
+    width:100px;
+    height: 100px;
+    border: 5px solid rgb(123, 42, 122);;
+    border-right-color: white;
+    border-left-color: white;
+}
+#testBlock2{
+    color: black;
+    background-color: black;
+    position:absolute;
+    left:500px;
+    top:100px;
+    width:100px;
+    height: 100px;
+    border: 5px solid rgb(123, 42, 122);;
+    border-right-color: white;
+    border-left-color: white;   
+}
+
+#testBlock3{
+    color: black;
+    background-color: black;
+    position:absolute;
+    left:45%;
+    top: 2140px;
+    width:100px;
+    height: 100px;
+    border: 5px solid rgb(123, 42, 122);;
+    border-right-color: white;
+    border-left-color: white;
+}
+
+
+#spawn {
+    position: absolute;
+
+    top:3000px;
+}
+
+
+#stapOneBorder{
+    background-color: black;
+    width: 1010px;
+    height: 1px;
+    left: -10px;
+    top:2250px;
+    position: absolute;
+    border: 1px solid black;
+}
+
+#stapFourBorder{
+    background-color: black;
+    width: 1px;
+    height: 3020px;
+    top:0px;
+    left: 1000px;
+    position: absolute;
+    border: 1px solid black;
+}
+
+#score {
+    left:1010px;
+    position: absolute;
+    top: 2500px;
+}
+
+#snakeScores {
+    position: absolute;
+    top: 1500px;
+    left: 1010px;
+
+}
+
+#powerScore{
+    position: absolute;
+    top:2600px;
+    left: 1020px;
+    width: 300px;
+}
+
+#rowsZone{
+    top: 2220px;
+    left: - 10;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+
+}
+
+#snakeHead {
+    z-index: 1;
+    top:1030px;
+    left: 100px;
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border: 1px solid white;
+    background-color: black;
+    }
+
+
+#snakeArea {
+    position: absolute;
+    top: 1000px;
+    width: 990px;
+    height: 990px;
+    left: 0px;
+    border: 0px solid red;
+}
+/*
+#snakeAponentHead {
+    z-index: 1;
+    top:0px;
+    left: -100px;
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border: 1px solid white;
+    background-color: black;
+}
+*/
