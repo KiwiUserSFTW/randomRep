@@ -1,10 +1,10 @@
 {
   "name": "pixelgame",
   "version": "1.0.0",
-  "description": "",
+  "description": "webGame for dot",
   "main": "app.js",
   "scripts": {
-    "start": "app.js"
+    "start": "node app.js"
   },
   "author": "dnll",
   "license": "ISC",

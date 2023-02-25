@@ -6,6 +6,7 @@ const { server } = require("websocket");
 const jsonParser = express.json();
 const filePath = 'database/data.json';
 
+
 let dataColors = fs.readFileSync(filePath, "utf8");
 let content = JSON.parse(dataColors);
 
