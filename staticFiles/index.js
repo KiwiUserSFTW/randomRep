@@ -1,6 +1,6 @@
 import stopModule from "/moduleOnn.js";
 
-let socket = new WebSocket("ws:http://18.157.165.43:3000/");
+let socket = new WebSocket("ws://18.157.165.43:3000/");
 
 socket.onopen = function(e) {
   console.log("[open] Соединение установлено");
